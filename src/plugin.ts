@@ -1,7 +1,9 @@
 /// <reference path="../lib/openrct2.d.ts" />
 
+import {startup} from "./main";
+
 registerPlugin({
-	name: "MaxGuestPlugin_V1.0.0",
+	name: "map-generator_V1.0.0",
 	version: "1.0.0",
 	authors: [ "NityeSky_Rodin" ],
 	type: "remote",
@@ -13,5 +15,5 @@ registerPlugin({
 	 * @see https://github.com/OpenRCT2/OpenRCT2/blob/v0.4.4/src/openrct2/scripting/ScriptEngine.h#L50
 	 */
 	targetApiVersion: 70,
-	main: main,
+	main: startup,
 });
