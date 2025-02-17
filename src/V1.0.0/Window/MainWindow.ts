@@ -1,16 +1,19 @@
-﻿import {GenerateMap} from "../Generator/Generator";
+﻿import {ShowWidget} from "./Widget/showWidget";
+import {generateRidgedMultiNoise, generateWorleyNoise} from "../Generator/Generator";
 
 let emptyWindow: Window;
 const windowTag = "MapGenerator";
 let windowShowInfo: Window = ui.getWindow(windowTag);
-const noiseTypes = ["SelectType", "RidgedMultiNoise"];
+const noiseTypes = ["SelectType", "RidgedMultiNoise", "WorleyNoise"];
 let noiseIndex = 0;
 let octavesIndex = 4;
 let lacunarityIndex = 2;
 let maxHeightIndex = 104;
 let minHeightIndex = 48;
+let worleyPointsIndex = 10;
 
 export function showMainWindow() {
+    
     if (windowShowInfo) {
         windowShowInfo.bringToFront();
         return;
@@ -31,7 +34,7 @@ export function showMainWindow() {
                 y: 60,
                 tooltip: "Generate map",
                 onClick: () => {
-                    GenerateMap(returnNoiseType(), octavesIndex, lacunarityIndex, 0.7, maxHeightIndex, minHeightIndex);
+                    noisetypes()
                 },
                 image: "cheats",
             },
@@ -46,6 +49,7 @@ export function showMainWindow() {
                 selectedIndex: noiseIndex,
                 onChange: (index) => {
                     noiseIndex = index;
+                    ShowWidget.getInstance().showWidgetInWindow(noiseTypes, noiseIndex, windowShowInfo);
                 }
             },
             {
@@ -179,6 +183,37 @@ export function showMainWindow() {
                         windowShowInfo.findWidget<SpinnerWidget>("minHeightSlider").text = text.toString();
                     }
                 }
+            },
+            {
+                name: "WorleyPointsLabel",
+                type: "label",
+                x: 150,
+                y: 140,
+                width: 100,
+                height: 26,
+                text: "WorleyPoints: ",
+            },
+            {
+                name: "worleyPointsSlider",
+                type: "spinner",
+                x: 250,
+                y: 140,
+                width: 100,
+                height: 26,
+                tooltip: "WorleyPoints",
+                text: "10",
+                onIncrement: () => {
+                    if (worleyPointsIndex < 1000) {
+                        worleyPointsIndex++;
+                        windowShowInfo.findWidget<SpinnerWidget>("worleyPointsSlider").text = worleyPointsIndex.toString()
+                    }
+                },
+                onDecrement: () => {
+                    if (worleyPointsIndex > 1) {
+                        worleyPointsIndex--;
+                        windowShowInfo.findWidget<SpinnerWidget>("worleyPointsSlider").text = worleyPointsIndex.toString()
+                    }
+                }
             }
         ],
         onClose() {
@@ -188,13 +223,23 @@ export function showMainWindow() {
         },
     }
     windowShowInfo = ui.openWindow(windowDesc);
+    ShowWidget.getInstance().showWidgetInWindow(noiseTypes, noiseIndex, windowShowInfo);
 }
 
-function returnNoiseType(): string {
-    if (noiseTypes[noiseIndex] === "SelectType") {
-        ui.showError("", "Please select a noise type");
-        return "";
-    }
 
-    return noiseTypes[noiseIndex];
+
+
+function noisetypes() {
+    
+    switch (noiseTypes[noiseIndex]) {
+        case "RidgedMultiNoise":
+            generateRidgedMultiNoise(octavesIndex, lacunarityIndex, 0.7, maxHeightIndex, minHeightIndex);
+            break;
+        case "WorleyNoise":
+            generateWorleyNoise(worleyPointsIndex, maxHeightIndex, minHeightIndex);
+            break;
+        default:
+            ui.showError("", "Please select a noise type");
+            break;
+    }
 }

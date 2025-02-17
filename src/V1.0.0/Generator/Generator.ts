@@ -1,17 +1,14 @@
 ﻿import {RidgedMultiNoise} from "./RigidMultiNoise/RigidMultiNoise";
-import {modifyTerrain} from "./RigidMultiNoise/RigidMultiNoiseGenerator";
+import {modifyTerrainRigidMulti} from "./RigidMultiNoise/RigidMultiNoiseGenerator";
+import {modifyTerrainWorley} from "./WorleyNoise/WorleyNoiseGenerator";
+import {WorleyNoise} from "./WorleyNoise/WorleyNoise";
 
-export function GenerateMap(generatorType: string, octaves: number = 4, lacunarity: number = 2, persistence: number = 0.7, maxHeight: number = 104, minHeight: number = 48) {
+export function generateRidgedMultiNoise(octaves: number, lacunarity: number, persistence: number, maxHeight: number, minHeight: number) {
+    modifyTerrainRigidMulti(map.size.x, map.size.y, minHeight, maxHeight, new RidgedMultiNoise(getRandomNumber(0, 1000), octaves, lacunarity, persistence));
+}
 
-    switch (generatorType){
-        case "RidgedMultiNoise":
-            modifyTerrain(map.size.x,map.size.y, minHeight, maxHeight, new RidgedMultiNoise(getRandomNumber(0,1000), octaves, lacunarity, persistence));
-            break;
-        default:
-            break;
-    }
-    
-    console.log("Generating map... with generator type: " + generatorType);
+export function generateWorleyNoise(WorleyPoints: number, maxHeight: number, minHeight: number) {
+    modifyTerrainWorley(map.size.x, map.size.y, minHeight, maxHeight, new WorleyNoise(getRandomNumber(0, 1000), WorleyPoints));
 }
 
 const getRandomNumber = (min: number, max: number) => {
