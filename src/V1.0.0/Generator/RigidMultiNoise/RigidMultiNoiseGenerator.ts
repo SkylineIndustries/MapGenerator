@@ -1,6 +1,6 @@
 ﻿import {RidgedMultiNoise} from "./RigidMultiNoise";
 
-export function modifyTerrain(width: number, height: number, baseHeight: number, maxHeight: number, noiseGen: RidgedMultiNoise) {
+export function modifyTerrainRigidMulti(width: number, height: number, baseHeight: number, maxHeight: number, noiseGen: RidgedMultiNoise) {
 
     resetTerrain(width, height, baseHeight);
 
